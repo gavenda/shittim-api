@@ -1,0 +1,15 @@
+name = "shittim-api"
+main = "src/index.ts"
+routes = [{ pattern = "api.shittim.gavenda.dev", custom_domain = true }]
+compatibility_date = "2023-11-21"
+d1_databases = [
+    { binding = "D1", database_name = "shittim", database_id = "e7ff4e27-3b37-49ab-a2ba-447068d56aa3" },
+]
+kv_namespaces = [
+    { binding = "VERIFY_RSA_JWT", id = "e3d919c8c15b4a4b82a2165fdbb5f2cd" },
+]
+
+[vars]
+ENVIRONMENT = "production"
+JWKS_URI = "https://dev-6jonl73dzpkm8x1n.jp.auth0.com/.well-known/jwks.json"
+VERIFY_RSA_JWT_JWKS_CACHE_KEY = "jwks"
