@@ -21,7 +21,9 @@ app.use('/*', cors());
 app.get('/', async c => c.text('💢😭'));
 
 app.get('/entry', async c => {
-  const { results } = await c.env.D1.prepare(`SELECT * FROM entry ORDER BY timestamp DESC LIMIT 10`).all();
+  const { results } = await c.env.D1.prepare(
+    `SELECT * FROM entry ORDER BY timestamp DESC LIMIT 10`
+  ).all();
 
   return c.json(results);
 });
@@ -33,6 +35,31 @@ app.get('/entry/:id', async c => {
     return c.json(result);
   } else {
     return c.text('Entry does not exist.', 404);
+  }
+});
+
+app.put('/entry/:id', verifyRsaJwt());
+
+app.put('/entry/:id', async c => {
+  const id = c.req.param('id');
+
+  const { title, subtitle, intro, body } = await c.req.json<Entry>();
+
+  if (!title) return c.text('Missing `author` value for new entry.');
+  if (!subtitle) return c.text('Missing `subtitle` value for new entry.');
+  if (!intro) return c.text('Missing `intro` value for new entry.');
+  if (!body) return c.text('Missing `body` value for new entry.');
+
+  const { success } = await c.env.D1.prepare(
+    `UPDATE entry SET title = ?, subtitle = ?, intro = ?, body = ? WHERE id = ?`
+  )
+    .bind(title, subtitle, intro, body, id)
+    .run();
+
+  if (success) {
+    return c.text('', 201);
+  } else {
+    return c.text('', 500);
   }
 });
 
