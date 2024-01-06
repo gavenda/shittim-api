@@ -31,7 +31,7 @@ app.get('/entry', async c => {
   const { results } = await c.env.D1.prepare(
     `SELECT * FROM entry ORDER BY timestamp DESC LIMIT ?, ?`
   )
-    .bind(limit, offset)
+    .bind(offset, limit)
     .all();
 
   return c.json({
