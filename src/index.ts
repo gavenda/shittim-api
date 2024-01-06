@@ -24,11 +24,9 @@ app.get('/entry', async c => {
   const limit = c.req.query('limit') ?? 10;
   const offset = c.req.query('offset') ?? 0;
 
-  const sizeResult = await c.env.D1.prepare(
-    `SELECT COUNT(*) as count FROM entry`
-  ).first();
+  const countResult = await c.env.D1.prepare(`SELECT COUNT(*) as count FROM entry`).first();
 
-  if (!sizeResult) return c.text('Cannot determine number of entries.');
+  if (!countResult) return c.text('Cannot determine number of entries.');
 
   const { results } = await c.env.D1.prepare(
     `SELECT * FROM entry ORDER BY timestamp DESC LIMIT ?, ?`
@@ -37,7 +35,7 @@ app.get('/entry', async c => {
     .all();
 
   return c.json({
-    size: sizeResult['count'],
+    size: countResult['count'],
     results,
   });
 });
