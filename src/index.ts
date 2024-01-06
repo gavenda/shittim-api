@@ -21,11 +21,25 @@ app.use('/*', cors());
 app.get('/', async c => c.text('💢😭'));
 
 app.get('/entry', async c => {
-  const { results } = await c.env.D1.prepare(
-    `SELECT * FROM entry ORDER BY timestamp DESC LIMIT 10`
-  ).all();
+  const limit = c.req.query('limit') ?? 10;
+  const offset = c.req.query('offset') ?? 0;
 
-  return c.json(results);
+  const sizeResult = await c.env.D1.prepare(
+    `SELECT COUNT(*) as count FROM entry`
+  ).first();
+
+  if (!sizeResult) return c.text('Cannot determine number of entries.');
+
+  const { results } = await c.env.D1.prepare(
+    `SELECT * FROM entry ORDER BY timestamp DESC LIMIT ?, ?`
+  )
+    .bind(limit, offset)
+    .all();
+
+  return c.json({
+    size: sizeResult['count'],
+    results,
+  });
 });
 
 app.get('/entry/:id', async c => {

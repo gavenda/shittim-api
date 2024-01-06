@@ -1,6 +1,6 @@
 name = "shittim-api"
 main = "src/index.ts"
-routes = [{ pattern = "api.shittim.gavenda.dev", custom_domain = true }]
+routes = "api.shittim.gavenda.dev"
 compatibility_date = "2023-11-21"
 d1_databases = [
     { binding = "D1", database_name = "shittim", database_id = "e7ff4e27-3b37-49ab-a2ba-447068d56aa3" },
