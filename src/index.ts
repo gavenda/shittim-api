@@ -21,8 +21,8 @@ app.use('/*', cors());
 app.get('/', async c => c.text('💢😭'));
 
 app.get('/entry', async c => {
-  const limit = c.req.query('limit') ?? 10;
-  const offset = c.req.query('offset') ?? 0;
+  const limit = Number(c.req.query('limit')) ?? 10;
+  const offset = Number(c.req.query('offset')) ?? 0;
 
   const countResult = await c.env.D1.prepare(`SELECT COUNT(*) as count FROM entry`).first();
 
