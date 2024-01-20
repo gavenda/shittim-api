@@ -11,5 +11,5 @@ kv_namespaces = [
 
 [vars]
 ENVIRONMENT = "production"
-JWKS_URI = "https://dev-6jonl73dzpkm8x1n.jp.auth0.com/.well-known/jwks.json"
+JWKS_URI = "https://gavenda.jp.auth0.com/.well-known/jwks.json"
 VERIFY_RSA_JWT_JWKS_CACHE_KEY = "jwks"
