@@ -6,7 +6,7 @@ export const entryGet = async (ctx: Context<{ Bindings: Bindings }>) => {
   const limit = Number(ctx.req.query('limit')) ?? 10;
   const offset = Number(ctx.req.query('offset')) ?? 0;
 
-  const countResult = await ctx.env.D1.prepare(`SELECT COUNT(*) as count FROM entry`).first();
+  const countResult = await ctx.env.D1.prepare(`SELECT COUNT(*) as count FROM entry WHERE hidden = 0`).first();
 
   if (!countResult) return ctx.text('Cannot determine number of entries.');
 
@@ -24,7 +24,7 @@ export const entryGet = async (ctx: Context<{ Bindings: Bindings }>) => {
 
 export const entryGetId = async (ctx: Context<{ Bindings: Bindings }>) => {
   const id = ctx.req.param('id');
-  const result = await ctx.env.D1.prepare(`SELECT * FROM entry WHERE id = ?`).bind(id).first();
+  const result = await ctx.env.D1.prepare(`SELECT * FROM entry WHERE id = ? AND hidden = 0`).bind(id).first();
   if (result) {
     return ctx.json(result);
   } else {
@@ -66,7 +66,7 @@ export const entryPost = async (ctx: Context<{ Bindings: Bindings }>) => {
   const timestamp = Date.now();
 
   const { success } = await ctx.env.D1.prepare(
-    `INSERT into entry (title, subtitle, intro, body, timestamp) VALUES (?, ?, ?, ?, ?)`
+    `INSERT into entry (title, subtitle, intro, body, timestamp, hidden) VALUES (?, ?, ?, ?, ?, 0)`
   )
     .bind(title, subtitle, intro, body, timestamp)
     .run();
