@@ -11,7 +11,7 @@ export const entryGet = async (ctx: Context<{ Bindings: Bindings }>) => {
   if (!countResult) return ctx.text('Cannot determine number of entries.');
 
   const { results } = await ctx.env.D1.prepare(
-    `SELECT * FROM entry ORDER BY timestamp DESC LIMIT ?, ?`
+    `SELECT * FROM entry WHERE hidden = 0 ORDER BY timestamp DESC LIMIT ?, ?`
   )
     .bind(offset, limit)
     .all();
